@@ -5,6 +5,13 @@ const router = express.Router();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
+// https://codeforgeek.com/render-html-file-expressjs/
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "views"));
+router.get("/about", (req, res) => {
+    res.render("about", { title: "Hey", message: "Hello there!" });
+});
+
 const port = process.env.PORT || 5000
 let docker_clients = []
 let client_id = 0
