@@ -1,0 +1,9 @@
+{
+  "name": "adsfrontend",
+  "version": "0.0.0",
+  "description": "ADSFrontend",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  }
+}

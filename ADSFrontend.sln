@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31912.275
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9092AA53-FB77-4645-B42D-1CCCA6BD08BD}") = "ADSFrontend", "ADSFrontend.njsproj", "{A2515825-F0C7-4AAF-A431-2848FDADD90E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A2515825-F0C7-4AAF-A431-2848FDADD90E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2515825-F0C7-4AAF-A431-2848FDADD90E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2515825-F0C7-4AAF-A431-2848FDADD90E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2515825-F0C7-4AAF-A431-2848FDADD90E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {13E39CFA-EBFF-451D-AF4B-EE2E6AD0F5F6}
+	EndGlobalSection
+EndGlobal
