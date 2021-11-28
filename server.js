@@ -5,12 +5,6 @@ const router = express.Router();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// https://codeforgeek.com/render-html-file-expressjs/
-app.set("view engine", "pug");
-app.set("views", path.join(__dirname, "views"));
-router.get("/about", (req, res) => {
-    res.render("about", { title: "Hey", message: "Hello there!" });
-});
 
 const port = process.env.PORT || 5000
 let docker_clients = []
@@ -19,6 +13,14 @@ let clients = new Map()
 
 app.listen(port, () => {
   console.log('ADS App listening on port ' + port)
+})
+
+app.get('/', (req, res) => {
+    res.render("index", { title: "Hey", message: "Hello there!" });
+})
+
+app.get('/about', (req, res) => {
+    res.render("about", { title: "Hey", message: "Hello there!" });
 })
 
 router.get('/server_client', (req, res) => {
@@ -36,7 +38,10 @@ router.post("/server_client_post", (req, res) => {
   res.send("Post sent")
 });
 
-app.use("/", router);
+app.set('view engine', 'pug');
+app.set('views', './views');
+
+app.use("/boop", router);
 
 router.get('*', handle_client_request)
 
