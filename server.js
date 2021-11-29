@@ -38,7 +38,6 @@ router_java_get_stuff.get('*', handle_java_connection)
 router_java_get_stuff.post('*', handle_java_connection)
 
 function handle_java_connection(req, res) {
-    console.log("hello?");
     docker_clients.unshift(res)
     res.setTimeout(20000, () => {
         res.send("Timed out")
@@ -54,10 +53,16 @@ router_java_send_stuff.post('*', handle_java_recieve)
 
 function handle_java_recieve(req, res) {
     console.log("got stuff?");
+    console.log(req.body)
     let id = parseInt(req.body.id)
-    clients.get(id).send(req.body.data)
+    console.log("hello")
+    //clients.get(id).send(req.body.data)
+    clients.get(id).render("about", { title: "Hey", message: req.body.isCurator });
+    //clients.get(id).send(req.body.isCurator)
+    console.log("dead")
     clients.delete(id)
     res.send("Post sent")
+    console.log("got to the end?")
 }
 
 
@@ -74,9 +79,8 @@ router_client.get('*', handle_client_request)
 router_client.post('*', handle_client_request)
 
 function handle_client_request(req, res) {
-    console.log(req.body)
   if (docker_clients.length > 0){
-    console.log(docker_clients.length)
+    //console.log(docker_clients.length)
     client_id += 1
     response_obj = {
       client_id:client_id,
