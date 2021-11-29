@@ -2,47 +2,72 @@ doctype html
 head
   link(rel='stylesheet' href='htmldiff.css')
   script(src='htmldiff.js')
-form
-  table
-    tr
-      th Current Knowledge Base
-      th Manual Editing
-      th Suggested Contribuition
-    tr
-      td#current_main
-        p Hello Mr. Wayne, decide what to do:
-        ul
-          li Call Alfred
-          li Take Thalia Al Gul to the cinema
-          li Save Gotham
-        span Use the mouse to choose an option.
-      td
-        textarea
-      td#contribuition
-        p Hello Batman, decide what to do:
-        ul
-          li Kill The Joker
-          li Save Thalia Al Gul
-          li Save Gotham
-        span Use the batarang to choose an option.
-    tr
-    tr
-      td
-        button(input='' type='submit' value='reject') Reject
-      td
-        button(input='' type='submit' value='mix') Mix
-      td
-        button(input='' type='submit' value='accept') Accept
-script(type='text/javascript').
-  // Get the content and see the differences
-  originalHTML = document.getElementById("current_main").innerHTML;
-  newHTML = document.getElementById("contribuition").innerHTML;
-  // Make it look like code
-  originalHTML = originalHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  newHTML = newHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-  // Check the differences
-  output = htmldiff(originalHTML, newHTML);
-  // Show HTML diff output as HTML (crazy right?)!
-  document.getElementById("contribuition").innerHTML = output;
-  // And show the main as regular old code
-  document.getElementById("current_main").innerHTML = originalHTML;
+
+body
+    h1= message
+    if (multiple_branches == "true")
+        form(method='post' action='/changeCuratorBranch')
+            input(type='hidden' name='pedido' value='changeCuratorBranch')
+            input(type='hidden' name='email' value=email)
+            select#branchSelection(name='branchSelection')
+                each branch in branches
+                    option=branch
+            button(input='' type='submit' value='selectedBranch') Check Branch
+    if (multiple_branches == "false" && branches != "")
+        form(method='post' action='/changeCuratorBranch')
+            input(type='hidden' name='pedido' value='changeCuratorBranch')
+            input(type='hidden' name='email' value=email)
+            select#branchSelection(name='branchSelection')
+                option=branches
+            button(input='' type='submit' value='selectedBranch') Check Branch
+    form(method='post' action='/curatorAction')
+      input(type='hidden' name='pedido' value='curatorAction')
+      input(type='hidden' name='email' value=email)
+      input(type='hidden' name='selectedBranch' value=branchName)
+      table
+        tr
+          th Current Knowledge Base
+          th Manual Editing
+          th
+            branchName= branchName
+        tr
+          td#current_main
+            mainBranch= mainBranch
+          td
+            textarea(name='mixed') Mix the 2 branches manually here
+          td#contribuition
+            branchContent= branchContent
+        tr
+        tr
+          td
+            input#accept(type='radio' value='acceptContribution' name='action')
+            label(for='accept') Accept
+          td
+            input#mix(type='radio' value='mixContribution' name='action')
+            label(for='mix') Mix
+          td
+            input#reject(type='radio' value='rejectContribution' name='action')
+            label(for='reject') Reject
+        tr
+          td
+            textarea(name='message') Message for the editor
+          td
+            button(input='' type='submit' value='accept') Accept
+          td Current Version:
+            currversion= currversion
+            p
+            label(for=nextversion) Next Version:
+            input#nextversion(type='text' name='nextversion' value=currversion)
+    script(type='text/javascript').
+      // Get the content and see the differences
+      originalHTML = document.getElementById("current_main").innerHTML;
+      newHTML = document.getElementById("contribuition").innerHTML;
+      // Make it look like code
+      originalHTML = originalHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      newHTML = newHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      // Check the differences
+      output = htmldiff(originalHTML, newHTML);
+      // Show HTML diff output as HTML (crazy right?)!
+      document.getElementById("contribuition").innerHTML = output;
+      // And show the main as regular old code
+      document.getElementById("current_main").innerHTML = originalHTML;

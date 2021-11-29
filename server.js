@@ -15,6 +15,8 @@ let clients = new Map()
 
 app.set('view engine', 'pug');
 app.set('views', './views');
+app.use(express.static('./css'));
+app.use(express.static('./js'));
 
 app.listen(port, () => {
   console.log('ADS App listening on port ' + port)
@@ -25,7 +27,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/curatorauth', (req, res) => {
-    res.render("curatorauth");
+    res.render("curatorauth", {message: ""});
 });
 
 app.get('/about', (req, res) => {
@@ -52,17 +54,47 @@ router_java_send_stuff.get('*', handle_java_recieve)
 router_java_send_stuff.post('*', handle_java_recieve)
 
 function handle_java_recieve(req, res) {
-    console.log("got stuff?");
-    console.log(req.body)
     let id = parseInt(req.body.id)
-    console.log("hello")
-    //clients.get(id).send(req.body.data)
-    clients.get(id).render("about", { title: "Hey", message: req.body.isCurator });
-    //clients.get(id).send(req.body.isCurator)
-    console.log("dead")
+    let nextPage = req.body.nextPage
+    console.log(req.body);
+    switch (nextPage) {
+        case 'curatorauth':
+            clients.get(id).render("curatorauth", { message: req.body.message });
+            break;
+        case 'curator':
+            clients.get(id).render("curator", {
+                branches: req.body.branch,
+                mainBranch: req.body.mainBranch,
+                branchContent: req.body.branchContent,
+                branchName: req.body.branchName,
+                email: req.body.email,
+                message: req.body.message,
+                multiple_branches: req.body.multiple_branches,
+                currversion: req.body.currversion
+            });
+            console.log("was authenticated and came here");
+            break;
+        case 'curatorPickedBranch':
+            clients.get(id).render("curator", {
+                branches: req.body.branch,
+                mainBranch: req.body.mainBranch,
+                branchContent: req.body.branchContent,
+                branchName: req.body.branchName,
+                email: req.body.email,
+                message: req.body.message,
+                multiple_branches: req.body.multiple_branches,
+                currversion: req.body.currversion
+            });
+            console.log("and then came here");
+        case 'editorSucess':
+            console.log('Mangoes and papayas are $2.79 a pound.');
+            // expected output: "Mangoes and papayas are $2.79 a pound."
+            break;
+        default:
+            console.log(`Sorry, we are out of ${nextPage}.`);
+    }
     clients.delete(id)
     res.send("Post sent")
-    console.log("got to the end?")
 }
 
 
@@ -74,13 +106,16 @@ app.use("/curator", router_client);
 app.use("/editor", router_client);
 app.use("/boop", router_client);
 app.use("/checkCuratorIsValid", router_client);
+app.use("/changeCuratorBranch", router_client);
+app.use("/curatorAction", router_client);
 
 router_client.get('*', handle_client_request)
 router_client.post('*', handle_client_request)
 
 function handle_client_request(req, res) {
   if (docker_clients.length > 0){
-    //console.log(docker_clients.length)
+      console.log(docker_clients.length)
+      console.log(req.body)
     client_id += 1
     response_obj = {
       client_id:client_id,
