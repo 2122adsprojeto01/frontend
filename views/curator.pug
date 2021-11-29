@@ -1,6 +1,48 @@
 doctype html
-html
-	head
-		title= title
-	body
-		h1= message
+head
+  link(rel='stylesheet' href='htmldiff.css')
+  script(src='htmldiff.js')
+form
+  table
+    tr
+      th Current Knowledge Base
+      th Manual Editing
+      th Suggested Contribuition
+    tr
+      td#current_main
+        p Hello Mr. Wayne, decide what to do:
+        ul
+          li Call Alfred
+          li Take Thalia Al Gul to the cinema
+          li Save Gotham
+        span Use the mouse to choose an option.
+      td
+        textarea
+      td#contribuition
+        p Hello Batman, decide what to do:
+        ul
+          li Kill The Joker
+          li Save Thalia Al Gul
+          li Save Gotham
+        span Use the batarang to choose an option.
+    tr
+    tr
+      td
+        button(input='' type='submit' value='reject') Reject
+      td
+        button(input='' type='submit' value='mix') Mix
+      td
+        button(input='' type='submit' value='accept') Accept
+script(type='text/javascript').
+  // Get the content and see the differences
+  originalHTML = document.getElementById("current_main").innerHTML;
+  newHTML = document.getElementById("contribuition").innerHTML;
+  // Make it look like code
+  originalHTML = originalHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  newHTML = newHTML.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  // Check the differences
+  output = htmldiff(originalHTML, newHTML);
+  // Show HTML diff output as HTML (crazy right?)!
+  document.getElementById("contribuition").innerHTML = output;
+  // And show the main as regular old code
+  document.getElementById("current_main").innerHTML = originalHTML;

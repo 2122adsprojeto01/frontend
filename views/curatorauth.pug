@@ -1,6 +1,5 @@
 doctype html
 html
-	head
-		title= title
-	body
-		h1= message
+    form(method='post' action='/checkCuratorIsValid')
+        input(type='text' name='email')
+        input(type='submit' value='Submit')
