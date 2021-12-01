@@ -74,19 +74,11 @@ function handle_java_recieve(req, res) {
             });
             console.log("was authenticated and came here");
             break;
-        case 'curatorPickedBranch':
-            clients.get(id).render("curator", {
-                branches: req.body.branch,
-                mainBranch: req.body.mainBranch,
-                branchContent: req.body.branchContent,
-                branchName: req.body.branchName,
-                email: req.body.email,
-                message: req.body.message,
-                multiple_branches: req.body.multiple_branches,
-                currversion: req.body.currversion
-            });
-            console.log("and then came here");
-        case 'editorSucess':
+        case 'editor':
+            console.log('Mangoes and papayas are $2.79 a pound.');
+            // expected output: "Mangoes and papayas are $2.79 a pound."
+            break;
+        case 'viewer':
             console.log('Mangoes and papayas are $2.79 a pound.');
             // expected output: "Mangoes and papayas are $2.79 a pound."
             break;

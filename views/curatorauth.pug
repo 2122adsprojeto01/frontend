@@ -1,5 +1,5 @@
-doctype html
-html
+extends index.pug
+block content
     form(method='post' action='/checkCuratorIsValid')
         input(type='hidden' name='pedido' value='checkCuratorIsValid')
         input(type='text' name='email')

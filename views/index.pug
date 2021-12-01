@@ -3,14 +3,18 @@ html
 	head
 		meta(content="width-device-width, initial-scale=1")
 		link(rel="stylesheet" href="style.css")
-		title= title
+		block moreHead
 	body
 		.topnav
 			ul.topnav-right
+				li
+					.logo
+						img(src="owl.png")
 				li
 					a(href="viewer") View Ontology
 				li
 					a(href="editor") Make a Contribution
 				li
 					a(href="curatorauth") Curator Area
-		h1= message
+		hr
+	block content
