@@ -70,14 +70,13 @@ block content
                 label(for=nextversion) Next Version:
                 input#nextversion(type='text' name='nextversion' value=currversion)
 
-
-        script(type='text/javascript').
-          if(branchName != ""){
-            // Get the content and see the differences
-            originalHTML = document.getElementById("current_main").innerHTML;
-            newHTML = document.getElementById("contribuition").innerHTML;
-            // Check the differences
-            output = htmldiff(originalHTML, newHTML);
-            // Show HTML diff output as HTML (crazy right?)!
-            document.getElementById("contribuition").innerHTML = output;
-           }
+        if(branchName != "")
+            script(type='text/javascript').
+                // Get the content and see the differences
+                originalHTML = document.getElementById("current_main").innerHTML;
+                newHTML = document.getElementById("contribuition").innerHTML;
+                // Check the differences
+                output = htmldiff(originalHTML, newHTML);
+                // Show HTML diff output as HTML (crazy right?)!
+                document.getElementById("contribuition").innerHTML = output;
+           

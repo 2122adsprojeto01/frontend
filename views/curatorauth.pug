@@ -1,6 +1,6 @@
 extends index.pug
 block content
-    form(method='post' action='/checkCuratorIsValid')
+    form(method='post' action='/curator')
         input(type='hidden' name='pedido' value='checkCuratorIsValid')
         input(type='text' name='email')
         input(type='submit' value='Submit')

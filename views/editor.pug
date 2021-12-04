@@ -1,2 +1,185 @@
-extends index.pug
-block content
+extends viewer.pug
+block evenMoreHead
+    link(rel='stylesheet' href='editor.css')
+    script(src='editor.js')
+block specificUserType
+    // Tab links
+    .tab
+      button.tablinks(onclick="openTab(event, 'Create')") Create
+      button.tablinks(onclick="openTab(event, 'Update')") Update
+      button.tablinks(onclick="openTab(event, 'Delete')") Delete
+    // Tab content
+    #Create.tabcontent
+      .tab
+        button.tablinks2(onclick="openTab2(event, 'ClassCreate')") Class
+        button.tablinks2(onclick="openTab2(event, 'IndividualCreate')") Individual
+        button.tablinks2(onclick="openTab2(event, 'DataPropertyCreate')") Data Property
+      #ClassCreate.tabcontent2
+        form(method='post' action='/createClass')
+            input(type='hidden' name='pedido' value='createClass')
+            table
+                tr
+                    td Class Name
+                    td
+                        input(type='text' name='name' required)
+                if (classes != "")
+                    tr
+                        td
+                            input#isSubclass(type='checkbox' name='isSubClass')
+                            label belongs to another class
+                        td
+                            if (multiple_classes == "true")
+                                select#parentC0lass(name='parentClass')
+                                    each c in classes
+                                        option= c
+                            if (multiple_classes == "false")
+                                select#parentC0lass(name='parentClass')
+                                    option= classes
+
+                tr
+                    td
+                        input#addComment(type='checkbox' name='addComment')
+                        label add comment
+                    td
+                        input(type='text' name='comment')  
+                tr
+                    td Your contact
+                    td
+                         input(type='text' name='email' required)
+                tr
+                    td Message
+                    td     
+                        textarea(name='commitMessage' required)
+            button(input='' type='submit' value='accept') Accept
+      #IndividualCreate.tabcontent2
+        form(method='post' action='/createIndividual')
+            input(type='hidden' name='pedido' value='createIndividual')
+            table
+                tr
+                    td Individual Name
+                    td
+                        input(type='text' name='name' required)
+                if (classes != "")
+                    tr
+                        td
+                            input#isPartOfClass(type='checkbox' name='isPartOfClass')
+                            label belongs to a class
+                        td
+                            if (multiple_classes == "true")
+                                select#parentC0lass(name='parentClass')
+                                    each c in classes
+                                        option= c
+                            if (multiple_classes == "false")
+                                select#parentC0lass(name='parentClass')
+                                    option= classes
+                tr
+                    td
+                        input#addComment(type='checkbox' name='addComment')
+                        label add comment
+                    td
+                        input(type='text' name='comment')  
+                tr
+                    td Your contact
+                    td
+                         input(type='text' name='email' required)
+                tr
+                    td Message
+                    td     
+                        textarea(name='commitMessage' required)
+            button(input='' type='submit' value='accept') Accept
+      #DataPropertyCreate.tabcontent2
+        form(method='post' action='/createDataProperty')
+            input(type='hidden' name='pedido' value='createDataProperty')
+            table
+                tr
+                    td Data Property Name
+                    td
+                        input(type='text' name='name' required)
+                tr
+                    td
+                        input#addComment(type='checkbox' name='addComment')
+                        label add comment
+                    td
+                        input(type='text' name='comment')  
+                tr
+                    td Your contact
+                    td
+                         input(type='text' name='email' required)
+                tr
+                    td Message
+                    td     
+                        textarea(name='commitMessage' required)
+            button(input='' type='submit' value='accept') Accept
+
+    #Update.tabcontent
+      .tab
+        button.tablinks2(onclick="openTab2(event, 'ClassUpdate')") Class
+        button.tablinks2(onclick="openTab2(event, 'IndividualUpdate')") Individual
+        button.tablinks2(onclick="openTab2(event, 'DataPropertyUpdate')") Data Property
+      #ClassUpdate.tabcontent2
+        p A form to update classes goes here.
+      #IndividualUpdate.tabcontent2
+        p A form to update individuals goes here.
+      #DataPropertyUpdate.tabcontent2
+        p A form to update data properties goes here.
+
+    #Delete.tabcontent
+        //button.tablinks2(onclick="openTab2(event, 'deleteStuff')") Class
+        form(method='post' action='/deleteStuff')
+            input(type='hidden' name='pedido' value='deleteStuff')
+            table
+                tr
+                    td
+                        input#deleteClass(type='checkbox' name='deleteClass')
+                        label Delete class
+                    if (classes != "")
+                        td
+                            if (multiple_classes == "true")
+                                select#classToDelete(name='classToDelete')
+                                    each c in classes
+                                        option= c
+                            if (multiple_classes == "false")
+                                select#classToDelete(name='classToDelete')
+                                    option= classes
+                    else
+                        td There are no classes to delete
+                tr
+                    td
+                        input#deleteIndividual(type='checkbox' name='deleteIndividual')
+                        label Delete Individual
+                    if (individuals != "")
+                        td
+                            if (multiple_individuals == "true")
+                                select#individualToDelete(name='individualToDelete')
+                                    each i in individuals
+                                        option= i
+                            if (multiple_individuals == "false")
+                                select#individualToDelete(name='individualToDelete')
+                                    option= individuals
+                    else
+                        td There are no individuals to delete
+                tr
+                    td
+                        input#deleteDataProperty(type='checkbox' name='deleteDataProperty')
+                        label Delete Property
+                    if (properties != "")
+                        td
+                            if (multiple_properties == "true")
+                                select#propertyToDelete(name='propertyToDelete')
+                                    each dp in properties
+                                        option= dp
+                            if (multiple_properties == "false")
+                                select#propertyToDelete(name='propertyToDelete')
+                                    option= properties
+                    else
+                        td There are no properties to delete
+                tr
+                    td Your contact
+                    td
+                         input(type='text' name='email' required)
+                tr
+                    td Message
+                    td     
+                        textarea(name='commitMessage' required)
+            button(input='' type='submit' value='accept') Accept
+    feedback= feedback

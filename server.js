@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const bodyParser = require("body-parser");
+const router_viewer = express.Router();
+const router_editor = express.Router();
 const router_client = express.Router();
 const router_java_get_stuff = express.Router();
 const router_java_send_stuff = express.Router();
@@ -75,12 +77,21 @@ function handle_java_recieve(req, res) {
             console.log("was authenticated and came here");
             break;
         case 'editor':
-            console.log('Mangoes and papayas are $2.79 a pound.');
-            // expected output: "Mangoes and papayas are $2.79 a pound."
+            clients.get(id).render("editor", {
+                page: req.body.page,
+                multiple_classes: req.body.multiple_classes,
+                classes: req.body.classes,
+                multiple_individuals: req.body.multiple_individuals,
+                individuals: req.body.individuals,
+                multiple_properties: req.body.multiple_properties,
+                properties: req.body.properties,
+                feedback: req.body.message
+            });
             break;
         case 'viewer':
-            console.log('Mangoes and papayas are $2.79 a pound.');
-            // expected output: "Mangoes and papayas are $2.79 a pound."
+            clients.get(id).render("viewer", {
+                page: req.body.page
+            });
             break;
         default:
             console.log(`Sorry, we are out of ${nextPage}.`);
@@ -93,18 +104,72 @@ function handle_java_recieve(req, res) {
 
 
 
-app.use("/viewer", router_client);
+app.use("/viewer", router_viewer);
+router_viewer.get('*', handle_client_viewer)
+router_viewer.post('*', handle_client_viewer)
+function handle_client_viewer(req, res) {
+    console.log(req.path);
+    if (docker_clients.length > 0) {
+        console.log(docker_clients.length)
+        console.log(req.body)
+        client_id += 1
+        response_obj = {
+            client_id: client_id,
+            url: req.path,
+            data: {
+                pedido: "viewer"
+            }
+        }
+        docker = docker_clients.pop()
+        docker.send(response_obj)
+        docker = null
+        clients.set(client_id, res)
+    } else {
+        res.send("Docker not connected!")
+    }
+}
+
+app.use("/editor", router_editor);
+router_editor.get('*', handle_client_editor)
+router_editor.post('*', handle_client_editor)
+function handle_client_editor(req, res) {
+    console.log(req.body);
+    if (docker_clients.length > 0) {
+        console.log(docker_clients.length)
+        console.log(req.body)
+        client_id += 1
+        response_obj = {
+            client_id: client_id,
+            url: req.path,
+            data: {
+                pedido: "editor"
+            }
+        }
+        docker = docker_clients.pop()
+        docker.send(response_obj)
+        docker = null
+        clients.set(client_id, res)
+    } else {
+        res.send("Docker not connected!")
+    }
+}
+
+
 app.use("/curator", router_client);
-app.use("/editor", router_client);
 app.use("/boop", router_client);
 app.use("/checkCuratorIsValid", router_client);
 app.use("/changeCuratorBranch", router_client);
 app.use("/curatorAction", router_client);
+app.use("/createClass", router_client);
+app.use("/createIndividual", router_client);
+app.use("/createDataProperty", router_client);
+app.use("/deleteStuff", router_client);
 
 router_client.get('*', handle_client_request)
 router_client.post('*', handle_client_request)
 
 function handle_client_request(req, res) {
+  console.log(req.path);
   if (docker_clients.length > 0){
       console.log(docker_clients.length)
       console.log(req.body)
