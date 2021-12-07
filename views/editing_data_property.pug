@@ -1,0 +1,44 @@
+extends viewer.pug
+block evenMoreHead
+    link(rel='stylesheet' href='editor.css')
+block specificUserType
+    // Tab links
+    form(method='post' action='/changeDataProperty')
+        input(type='hidden' name='pedido' value='changeDataProperty')
+        input(type='hidden' name='oldName' value= oldName)
+        h1= dataProperty
+        table
+            tr
+                td 
+                    input#changeName(type='checkbox' name='changeName')
+                    label Change Name
+                td
+                    input(type='text' name='newName')
+            if (hasComment == "true")
+                tr
+                    td 
+                        input#changeComment(type='checkbox' name='changeComment')
+                        label Change Comment
+                    td
+                        input(type='text' name='newComment' value=comment)
+                tr
+                    td
+                        input#deleteComment(type='checkbox' name='deleteComment')
+                        label Delete Comment
+            else
+                tr
+                    td 
+                        input#addComment(type='checkbox' name='addComment')
+                        label Change Comment
+                    td
+                        input(type='text' name='newComment')
+            tr
+                td Your contact
+                td
+                        input(type='text' name='email' required)
+            tr
+                td Message
+                td     
+                    textarea(name='commitMessage' required)
+        button(input='' type='submit' value='accept') Accept
+                    

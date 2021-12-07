@@ -83,9 +83,40 @@ function handle_java_recieve(req, res) {
                 classes: req.body.classes,
                 multiple_individuals: req.body.multiple_individuals,
                 individuals: req.body.individuals,
-                multiple_properties: req.body.multiple_properties,
-                properties: req.body.properties,
+                multiple_data_properties: req.body.multiple_data_properties,
+                dataProperties: req.body.dataProperties,
+                multiple_object_properties: req.body.multiple_object_properties,
+                objectProperties: req.body.objectProperties,
                 feedback: req.body.message
+            });
+            break;
+        case 'editClass':
+            break;
+        case 'editIndividual':
+            break;
+        case 'editDataProperty':
+            clients.get(id).render("editing_data_property", {
+                page: req.body.page,
+                dataProperty: 'Editing Data Property: ' + req.body.dataProperty,
+                hasComment: req.body.hasComment,
+                comment: req.body.comment,
+                oldName: req.body.dataProperty
+            });
+            break;
+        case 'editObjectProperty':
+            clients.get(id).render("editing_object_property", {
+                page: req.body.page,
+                dataProperty: 'Editing Object Property: ' + req.body.objectProperty,
+                hasComment: req.body.hasComment,
+                comment: req.body.comment,
+                oldName: req.body.objectProperty,
+                transitive: req.body.transitive,
+                asymmetric: req.body.asymmetric,
+                symmetric: req.body.symmetric,
+                reflexive: req.body.reflexive,
+                irreflexive: req.body.irreflexive,
+                functional: req.body.functional,
+                inverseFuncional: req.body.inverseFuncional
             });
             break;
         case 'viewer':
@@ -163,7 +194,16 @@ app.use("/curatorAction", router_client);
 app.use("/createClass", router_client);
 app.use("/createIndividual", router_client);
 app.use("/createDataProperty", router_client);
+app.use("/createObjectProperty", router_client);
+app.use("/editClass", router_client);
+app.use("/editIndividual", router_client);
+app.use("/editDataProperty", router_client);
+app.use("/editObjectProperty", router_client);
 app.use("/deleteStuff", router_client);
+app.use("/changeClass", router_client);
+app.use("/changeIndividual", router_client);
+app.use("/changeDataProperty", router_client);
+app.use("/changeObjectProperty", router_client);
 
 router_client.get('*', handle_client_request)
 router_client.post('*', handle_client_request)

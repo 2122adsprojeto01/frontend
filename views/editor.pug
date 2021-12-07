@@ -14,6 +14,7 @@ block specificUserType
         button.tablinks2(onclick="openTab2(event, 'ClassCreate')") Class
         button.tablinks2(onclick="openTab2(event, 'IndividualCreate')") Individual
         button.tablinks2(onclick="openTab2(event, 'DataPropertyCreate')") Data Property
+        button.tablinks2(onclick="openTab2(event, 'ObjectPropertyCreate')") Object Property
       #ClassCreate.tabcontent2
         form(method='post' action='/createClass')
             input(type='hidden' name='pedido' value='createClass')
@@ -110,19 +111,128 @@ block specificUserType
                     td     
                         textarea(name='commitMessage' required)
             button(input='' type='submit' value='accept') Accept
+      
+      #ObjectPropertyCreate.tabcontent2
+        form(method='post' action='/createObjectProperty')
+            input(type='hidden' name='pedido' value='createObjectProperty')
+            table
+                tr
+                    td Object Property Name
+                    td
+                        input(type='text' name='name' required)
+                tr
+                    td
+                        input#isTransitive(type='checkbox' name='isTransitive')
+                        label is transitive
+                    td -
+                tr
+                    td
+                        input#isAsymmetric(type='checkbox' name='isAsymmetric')
+                        label is asymmetric
+                    td
+                        input#isSymmetric(type='checkbox' name='isSymmetric')
+                        label is symmetric
+                tr
+                    td
+                        input#isReflexive(type='checkbox' name='isReflexive')
+                        label is reflexive
+                    td
+                        input#isIrreflexive(type='checkbox' name='isIrreflexive')
+                        label is irreflexive
+                tr
+                    td
+                        input#isFunctional(type='checkbox' name='isFunctional')
+                        label is functional
+                    td
+                        input#isInverseFunctional(type='checkbox' name='isInverseFunctional')
+                        label is inverse functional
+                tr
+                    td
+                        input#addComment(type='checkbox' name='addComment')
+                        label add comment
+                    td
+                        input(type='text' name='comment')  
+                tr
+                    td Your contact
+                    td
+                         input(type='text' name='email' required)
+                tr
+                    td Message
+                    td     
+                        textarea(name='commitMessage' required)
+            button(input='' type='submit' value='accept') Accept  
 
     #Update.tabcontent
-      .tab
-        button.tablinks2(onclick="openTab2(event, 'ClassUpdate')") Class
-        button.tablinks2(onclick="openTab2(event, 'IndividualUpdate')") Individual
-        button.tablinks2(onclick="openTab2(event, 'DataPropertyUpdate')") Data Property
-      #ClassUpdate.tabcontent2
-        p A form to update classes goes here.
-      #IndividualUpdate.tabcontent2
-        p A form to update individuals goes here.
-      #DataPropertyUpdate.tabcontent2
-        p A form to update data properties goes here.
-
+      table
+        form(method='post' action='/editClass')
+            input(type='hidden' name='pedido' value='editClass')
+            tr
+                if (classes != "")
+                    td Classes
+                    td
+                        if (multiple_classes == "true")
+                            select#classToEdit(name='classToEdit')
+                                each c in classes
+                                    option= c
+                        if (multiple_classes == "false")
+                            select#classToEdit(name='classToEdit')
+                                option= classes
+                    td 
+                        button(input='' type='submit' value='accept') Edit
+                else
+                    td There are no classes to delete
+        form(method='post' action='/editIndividual')
+            input(type='hidden' name='pedido' value='editIndividual')
+            tr
+                if (individuals != "")
+                    td Individuals
+                    td
+                        if (multiple_individuals == "true")
+                            select#individualToEdit(name='individualToEdit')
+                                each i in individuals
+                                    option= i
+                        if (multiple_individuals == "false")
+                            select#individualToEdit(name='individualToEdit')
+                                option= individuals
+                    td 
+                        button(input='' type='submit' value='accept') Edit
+                else
+                    td There are no individuals to edit
+        form(method='post' action='/editDataProperty')
+            input(type='hidden' name='pedido' value='editDataProperty')
+            tr
+                if (dataProperties != "")
+                    td Data Properties
+                    td
+                        if (multiple_data_properties == "true")
+                            select#dataPropertyToEdit(name='dataPropertyToEdit')
+                                each dp in dataProperties
+                                    option= dp
+                        if (multiple_data_properties == "false")
+                            select#dataPropertyToEdit(name='dataPropertyToEdit')
+                                option= dataProperties
+                    td 
+                        button(input='' type='submit' value='accept') Edit
+                else
+                    td There are no data properties to edit
+        form(method='post' action='/editObjectProperty')
+            input(type='hidden' name='pedido' value='editObjectProperty')
+            tr
+                if (objectProperties != "")
+                    td Object Properties
+                    td
+                        if (multiple_object_properties == "true")
+                            select#objectPropertyToEdit(name='objectPropertyToEdit')
+                                each op in objectProperties
+                                    option= op
+                        if (multiple_object_properties == "false")
+                            select#opjectPropertyToEdit(name='objectPropertyToEdit')
+                                option= objectProperties
+                    td 
+                        button(input='' type='submit' value='accept') Edit
+                else
+                    td There are no object properties to edit
+           
     #Delete.tabcontent
         //button.tablinks2(onclick="openTab2(event, 'deleteStuff')") Class
         form(method='post' action='/deleteStuff')
@@ -161,18 +271,33 @@ block specificUserType
                 tr
                     td
                         input#deleteDataProperty(type='checkbox' name='deleteDataProperty')
-                        label Delete Property
-                    if (properties != "")
+                        label Delete Data Property
+                    if (dataProperties != "")
                         td
-                            if (multiple_properties == "true")
-                                select#propertyToDelete(name='propertyToDelete')
-                                    each dp in properties
+                            if (multiple_data_properties == "true")
+                                select#dataPropertyToDelete(name='dataPropertyToDelete')
+                                    each dp in dataProperties
                                         option= dp
-                            if (multiple_properties == "false")
-                                select#propertyToDelete(name='propertyToDelete')
-                                    option= properties
+                            if (multiple_data_properties == "false")
+                                select#dataPropertyToDelete(name='dataPropertyToDelete')
+                                    option= dataProperties
                     else
-                        td There are no properties to delete
+                        td There are no data properties to delete
+                tr
+                    td
+                        input#deleteObjectProperty(type='checkbox' name='deleteObjectProperty')
+                        label Delete Object Property
+                    if (objectProperties != "")
+                        td
+                            if (multiple_object_properties == "true")
+                                select#objectPropertyToDelete(name='objectPropertyToDelete')
+                                    each op in objectProperties
+                                        option= op
+                            if (multiple_object_properties == "false")
+                                select#objectPropertyToDelete(name='objectPropertyToDelete')
+                                    option= objectProperties
+                    else
+                        td There are no object properties to delete
                 tr
                     td Your contact
                     td

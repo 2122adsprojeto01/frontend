@@ -1,0 +1,98 @@
+extends viewer.pug
+block evenMoreHead
+    link(rel='stylesheet' href='editor.css')
+block specificUserType
+    // Tab links
+    form(method='post' action='/changeObjectProperty')
+        input(type='hidden' name='pedido' value='changeObjectProperty')
+        input(type='hidden' name='oldName' value=oldName)
+        h1= objectProperty
+        table
+            tr
+                td 
+                    input#changeName(type='checkbox' name='changeName')
+                    label Change Name
+                td
+                    input(type='text' name='newName')
+            tr
+                td Check/Uncheck what you wish to change
+                td
+                    if (transitive == "true")
+                        input#isTransitive(type='checkbox' name='isTransitive' checked)
+                        label is transitive
+                    else
+                        input#isTransitive(type='checkbox' name='isTransitive' checked)
+                        label is transitive
+            tr
+                td
+                    if (asymmetric == "true")
+                        input#isAsymmetric(type='checkbox' name='isAsymmetric' checked)
+                        label is asymmetric
+                    else
+                        input#isAsymmetric(type='checkbox' name='isAsymmetric')
+                        label is asymmetric
+                td
+                    if (symmetric == "true")
+                        input#isSymmetric(type='checkbox' name='isSymmetric' checked)
+                        label is symmetric
+                    else
+                        input#isSymmetric(type='checkbox' name='isSymmetric')
+                        label is symmetric
+            tr
+                td
+                    if (reflexive == "true")
+                        input#isReflexive(type='checkbox' name='isReflexive' checked)
+                        label is reflexive
+                    else
+                        input#isReflexive(type='checkbox' name='isReflexive')
+                        label is reflexive
+                td
+                    if (irreflexive == "true")
+                        input#isIrreflexive(type='checkbox' name='isIrreflexive' checked)
+                        label is irreflexive
+                    else
+                        input#isIrreflexive(type='checkbox' name='isIrreflexive')
+                        label is irreflexive
+            tr
+                td
+                    if (functional == "true")
+                        input#isFunctional(type='checkbox' name='isFunctional' checked)
+                        label is functional
+                    else
+                        input#isFunctional(type='checkbox' name='isFunctional')
+                        label is functional
+                td
+                    if (inverseFunctional == "true")
+                        input#isInverseFunctional(type='checkbox' name='isInverseFunctional' checked)
+                        label is inverse functional
+                    else
+                        input#isInverseFunctional(type='checkbox' name='isInverseFunctional')
+                        label is inverse functional
+            if (hasComment == "true")
+                tr
+                    td 
+                        input#changeComment(type='checkbox' name='changeComment')
+                        label Change Comment
+                    td
+                        input(type='text' name='newComment' value=comment)
+                tr
+                    td
+                        input#deleteComment(type='checkbox' name='deleteComment')
+                        label Delete Comment
+            else
+                tr
+                    td 
+                        input#addComment(type='checkbox' name='addComment')
+                        label Change Comment
+                    td
+                        input(type='text' name='newComment')
+            tr
+                td Your contact
+                td
+                        input(type='text' name='email' required)
+            tr
+                td Message
+                td     
+                    textarea(name='commitMessage' required)
+        button(input='' type='submit' value='accept') Accept
+                    
