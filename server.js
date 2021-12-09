@@ -91,8 +91,39 @@ function handle_java_recieve(req, res) {
             });
             break;
         case 'editClass':
+            clients.get(id).render("editing_class", {
+                page: req.body.page,
+                title: 'Editing Class: ' + req.body.className,
+                hasComment: req.body.hasComment,
+                comment: req.body.comment,
+                oldName: req.body.className,
+                parentClasses: req.body.parentClasses,
+                multiple_parent_classes: req.body.multiple_parent_classes,
+                otherClasses: req.body.otherClasses,
+                multiple_other_classes: req.body.multiple_other_classes
+            });
             break;
         case 'editIndividual':
+            clients.get(id).render("editing_individual", {
+                page: req.body.page,
+                individual: 'Editing Individual: ' + req.body.individual,
+                hasComment: req.body.hasComment,
+                comment: req.body.comment,
+                oldName: req.body.individual,
+                parentClass: req.body.parentClass,
+                classes: req.body.classes,
+                multiple_classes: req.body.multiple_classes,
+                usedDataProperties: req.body.usedDataProperties,
+                multiple_used_data_properties: req.body.multiple_used_data_properties,
+                otherDataProperties: req.body.otherDataProperties,
+                multiple_other_data_properties: req.body.multiple_other_data_properties,
+                usedObjectProperties: req.body.usedObjectProperties,
+                multiple_used_object_properties: req.body.multiple_used_object_properties,
+                otherObjectProperties: req.body.otherObjectProperties,
+                multiple_other_object_properties: req.body.multiple_other_object_properties,
+                otherIndividuals: req.body.otherIndividuals,
+                multiple_other_individuals: req.body.multiple_other_individuals
+            });
             break;
         case 'editDataProperty':
             clients.get(id).render("editing_data_property", {

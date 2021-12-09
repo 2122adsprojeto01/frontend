@@ -3,10 +3,10 @@ block evenMoreHead
     link(rel='stylesheet' href='editor.css')
 block specificUserType
     // Tab links
-    form(method='post' action='/changeDataProperty')
-        input(type='hidden' name='pedido' value='changeDataProperty')
+    form(method='post' action='/changeClass')
+        input(type='hidden' name='pedido' value='changeClass')
         input(type='hidden' name='oldName' value= oldName)
-        h1= dataProperty
+        h1= title
         table
             tr
                 td 
@@ -14,6 +14,35 @@ block specificUserType
                     label Change Name
                 td
                     input(type='text' name='newName')
+            if (parentClasses != "")
+                tr
+                    td
+                        input#removeParent(type='checkbox' name='removeParent')
+                        label Remove that it's subclass of
+                    td
+                        if (multiple_parent_classes == "true")
+                            select#parentToRemove(name='parentToRemove')
+                                each c in parentClasses
+                                    option= c
+                        if (multiple_parent_classes == "false")
+                            select#parentToRemove(name='parentToRemove')
+                                option= parentClasses
+            if (otherClasses != "")
+                tr
+                    td
+                        input#addParent(type='checkbox' name='addParent')
+                        label Add that it's subclass of
+                    td
+                        if (multiple_other_classes == "true")
+                            select#parentToAdd(name='parentToAdd')
+                                each c in otherClasses
+                                    option= c
+                        else if (multiple_other_classes == "false")
+                            select#parentToAdd(name='parentToAdd')
+                                option= otherClasses
+            
+
+  
             if (hasComment == "true")
                 tr
                     td 
@@ -29,7 +58,7 @@ block specificUserType
                 tr
                     td 
                         input#addComment(type='checkbox' name='addComment')
-                        label Change Comment
+                        label Add Comment
                     td
                         input(type='text' name='newComment')
             tr

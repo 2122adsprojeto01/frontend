@@ -3,10 +3,10 @@ block evenMoreHead
     link(rel='stylesheet' href='editor.css')
 block specificUserType
     // Tab links
-    form(method='post' action='/changeDataProperty')
-        input(type='hidden' name='pedido' value='changeDataProperty')
+    form(method='post' action='/changeIndividual')
+        input(type='hidden' name='pedido' value='changeIndividual')
         input(type='hidden' name='oldName' value= oldName)
-        h1= dataProperty
+        h1= individual
         table
             tr
                 td 
@@ -14,6 +14,134 @@ block specificUserType
                     label Change Name
                 td
                     input(type='text' name='newName')
+            if (parentClass != "")
+                tr
+                    td
+                        input#removeParent(type='checkbox' name='removeParent')
+                        label Remove that it's a
+                    td
+                        parent= parentClass
+            else
+                tr
+                    if (classes != "")
+                        td
+                            input#addParent(type='checkbox' name='addParent')
+                            label belongs to another class
+                        td
+                            if (multiple_classes == "true")
+                                select#parentClass(name='parentClass')
+                                    each c in classes
+                                        option= c
+                            if (multiple_classes == "false")
+                                select#parentClass(name='parentClass')
+                                    option= classes
+                    else
+                        td There are no classes it can belong to
+            
+
+            if (usedDataProperties != "")
+                tr
+                    td
+                        input#removeDataProperty(type='checkbox' name='removeDataProperty')
+                        label Remove a data property from the class
+                    td
+                        if (multiple_used_data_properties == "true")
+                            select#dataPropertyToRemove(name='dataPropertyToRemove')
+                                each dp in usedDataProperties
+                                    option= dp
+                        if (multiple_used_data_properties == "false")
+                            select#dataPropertyToRemove(name='dataPropertyToRemove')
+                                option= usedDataProperties
+                tr
+                    td
+                        input#changeDataProperty(type='checkbox' name='changeDataProperty')
+                        label Change the value of a data property from the class
+                    td
+                        if (multiple_used_data_properties == "true")
+                            select#dataPropertyToChange(name='dataPropertyToChange')
+                                each dp in usedDataProperties
+                                    option= dp
+                        if (multiple_used_data_properties == "false")
+                            select#dataPropertyToChange(name='dataPropertyToChange')
+                                option= usedDataProperties
+                    td
+                        input(type='text' name='changeValue')
+                        
+            if (otherDataProperties != "")
+                tr
+                    td
+                        input#addDataProperty(type='checkbox' name='addDataProperty')
+                        label Add a data property to the class
+                    td
+                        if (multiple_other_data_properties == "true")
+                            select#dataPropertyToAdd(name='dataPropertyToAdd')
+                                each dp in otherDataProperties
+                                    option= dp
+                        if (multiple_other_data_properties == "false")
+                            select#dataPropertyToAdd(name='dataPropertyToAdd')
+                                option= otherDataProperties
+                    td
+                        input(type='text' name='newValue')
+
+            if (usedObjectProperties != "")
+                tr
+                    td
+                        input#removeObjectProperty(type='checkbox' name='removeObjectProperty')
+                        label Remove an object property from the individual
+                    td
+                        if (multiple_used_object_properties == "true")
+                            select#objectPropertyToRemove(name='objectPropertyToRemove')
+                                each op in usedObjectProperties
+                                    option= op
+                        if (multiple_used_object_properties == "false")
+                            select#objectPropertyToRemove(name='objectPropertyToRemove')
+                                option= usedObjectProperties
+                //tr
+                   td
+                        input#changeObjectProperty(type='checkbox' name='changeObjectProperty')
+                        label Change the value of a object property from the class
+                    td
+                        if (multiple_used_object_properties == "true")
+                            select#objectPropertyToChange(name='objectPropertyToChange')
+                                each op in usedObjectProperties
+                                    option= op
+                        if (multiple_used_object_properties == "false")
+                            select#objectPropertyToChange(name='objectPropertyToChange')
+                                option= usedObjectProperties
+                    td
+                       if(multiple_other_individuals == "true")
+                            select#newConnectedIndividual(name='newConnectedIndividual')
+                                each i in otherIndividuals
+                                    option= i
+                       else
+                            select#newConnectedIndividual(name='newConnectedIndividual')
+                                option= otherIndividuals
+                        
+            if (otherObjectProperties != "" && otherIndividuals != "")
+                tr
+                    td
+                        input#addObjectProperty(type='checkbox' name='addObjectProperty')
+                        label Add an object property to the individual
+                    td
+                        if (multiple_other_object_properties == "true")
+                            select#objectPropertyToAdd(name='objectPropertyToAdd')
+                                each op in otherObjectProperties
+                                    option= op
+                        if (multiple_other_object_properties == "false")
+                            select#objectPropertyToAdd(name='objectPropertyToAdd')
+                                option= otherObjectProperties
+                    td
+                       if(multiple_other_individuals == "true")
+                            select#newConnectedIndividual(name='newConnectedIndividual')
+                                each i in otherIndividuals
+                                    option= i
+                       else
+                            select#newConnectedIndividual(name='newConnectedIndividual')
+                                option= otherIndividuals
+            else
+                tr
+                   td It's not possible to add object properties to this individual at this moment 
+  
             if (hasComment == "true")
                 tr
                     td 

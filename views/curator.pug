@@ -6,6 +6,7 @@ block moreHead
 
 block content
         h1= message
+        p Warning! After accepting 1 contribution, all others that were generated from the previous main must either be rejected or manually added through the mixing option
         if (multiple_branches == "true")
             form(method='post' action='/changeCuratorBranch')
                 input(type='hidden' name='pedido' value='changeCuratorBranch')
