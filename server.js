@@ -3,6 +3,7 @@ const app = express()
 const bodyParser = require("body-parser");
 const router_viewer = express.Router();
 const router_editor = express.Router();
+const router_queries = express.Router();
 const router_client = express.Router();
 const router_java_get_stuff = express.Router();
 const router_java_send_stuff = express.Router();
@@ -152,7 +153,19 @@ function handle_java_recieve(req, res) {
             break;
         case 'viewer':
             clients.get(id).render("viewer", {
-                page: req.body.page
+                page: req.body.page,
+                tabela1: req.body.tabela1
+            });
+            break;
+        case 'queries':
+            clients.get(id).render("queries", {
+                page: req.body.page,
+                answers: req.body.answers,
+                multiple_answers: req.body.multiple_answers,
+                classes: req.body.classes,
+                multiple_classes: req.body.multiple_classes,
+                dataProperties: req.body.dataProperties,
+                multiple_data_properties: req.body.multiple_data_properties
             });
             break;
         default:
@@ -216,6 +229,31 @@ function handle_client_editor(req, res) {
     }
 }
 
+app.use("/queries", router_queries);
+router_queries.get('*', handle_client_queries)
+router_queries.post('*', handle_client_queries)
+function handle_client_queries(req, res) {
+    console.log(req.body);
+    if (docker_clients.length > 0) {
+        console.log(docker_clients.length)
+        console.log(req.body)
+        client_id += 1
+        response_obj = {
+            client_id: client_id,
+            url: req.path,
+            data: {
+                pedido: "queries"
+            }
+        }
+        docker = docker_clients.pop()
+        docker.send(response_obj)
+        docker = null
+        clients.set(client_id, res)
+    } else {
+        res.send("Docker not connected!")
+    }
+}
+
 
 app.use("/curator", router_client);
 app.use("/boop", router_client);
@@ -235,6 +273,8 @@ app.use("/changeClass", router_client);
 app.use("/changeIndividual", router_client);
 app.use("/changeDataProperty", router_client);
 app.use("/changeObjectProperty", router_client);
+app.use("/formQuery", router_client);
+app.use("/stringQuery", router_client);
 
 router_client.get('*', handle_client_request)
 router_client.post('*', handle_client_request)

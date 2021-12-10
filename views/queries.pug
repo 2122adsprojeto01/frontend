@@ -1,0 +1,88 @@
+extends viewer.pug
+block evenMoreHead
+    link(rel='stylesheet' href='editor.css')
+block specificUserType
+    if(answers != "")
+        h1 Answers
+        ul
+            if (multiple_answers == "true")
+                each a in answers
+                    li= a
+            if (multiple_answers == "false")
+                li= a
+
+    h1 Make a query with the helpful form
+    p Using this for allows you to find individuals that fit what you picked
+    form(method='post' action='/formQuery')
+        input(type='hidden' name='pedido' value='formQuery')
+        table
+            tr
+                if (classes != "" && dataProperties != "")
+                    td Pick the class of the individual
+                    td
+                        if (multiple_classes == "true")
+                            select#classToQuery(name='classToQuery')
+                                each c in classes
+                                    option= c
+                        if (multiple_classes == "false")
+                            select#classToQuery(name='classToQuery')
+                                option= classes
+                    tr
+                        td Pick what it should have
+                        td
+                            if (multiple_data_properties == "true")
+                                select#dataProperty1(name='dataProperty1')
+                                    each dp in dataProperties
+                                        option= dp
+                            if (multiple_data_properties == "false")
+                                select#dataProperty1(name='dataProperty1')
+                                    option= dataProperties
+                        td
+                            select#operator1(name='operator1')
+                                option= '=='
+                                option= '!='
+                                option= '>'
+                                option= '>='
+                                option= '<'
+                                option= '<='
+                        td
+                            input(type='text' name='value1' required)
+                    tr
+                        td
+                            input#complexQuery(type='checkbox' name='complexQuery')
+                            label What it to have something else?
+                        td
+                            select#connection(name='connection')
+                                option and
+                                option or
+                    tr
+                        td Pick what it should have
+                        td
+                            if (multiple_data_properties == "true")
+                                select#dataProperty2(name='dataProperty2')
+                                    each dp in dataProperties
+                                        option= dp
+                            if (multiple_data_properties == "false")
+                                select#dataProperty2(name='dataProperty2')
+                                    option= dataProperties
+                        td
+                            select#operator2(name='operator2')
+                                option= '=='
+                                option= '!='
+                                option= '>'
+                                option= '>='
+                                option= '<'
+                                option= '<='
+                        td
+                            input(type='text' name='value2')
+                else
+                    td It's currently not possible to do a query through the form
+        input(type='submit' value='Submit')
+        
+
+    h1 Make an advanced query
+    p Using this query method requires deep knowledge of how to question the knowledge base
+    form(method='post' action='/stringQuery')
+        input(type='hidden' name='pedido' value='stringQuery')
+        input(type='text' name='queryToMake' required)
+        input(type='submit' value='Submit')
