@@ -138,7 +138,7 @@ function handle_java_recieve(req, res) {
         case 'editObjectProperty':
             clients.get(id).render("editing_object_property", {
                 page: req.body.page,
-                dataProperty: 'Editing Object Property: ' + req.body.objectProperty,
+                objectProperty: 'Editing Object Property: ' + req.body.objectProperty,
                 hasComment: req.body.hasComment,
                 comment: req.body.comment,
                 oldName: req.body.objectProperty,
