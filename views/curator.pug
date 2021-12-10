@@ -15,7 +15,7 @@ block content
                     each branch in branches
                         option=branch
                 button(input='' type='submit' value='selectedBranch') Check Branch
-        if (multiple_branches == "false" && branches != "")
+        else if (multiple_branches == "false" && branches != "")
             form(method='post' action='/changeCuratorBranch')
                 input(type='hidden' name='pedido' value='changeCuratorBranch')
                 input(type='hidden' name='email' value=email)
