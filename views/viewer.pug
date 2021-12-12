@@ -1,6 +1,225 @@
 extends index.pug
 block moreHead
     block evenMoreHead
+        link(href='https://unpkg.com/tabulator-tables@5.0.7/dist/css/tabulator.min.css' rel='stylesheet')
+        script(type='text/javascript' src='https://unpkg.com/tabulator-tables@5.0.7/dist/js/tabulator.min.js')
+
 block content
     h1= page
     block specificUserType
+        h2 Classes
+        #hiddenClasses(style='display: none;')= tabelaClasses
+        #hiddenIndividuals(style='display: none;')= tabelaIndividuals
+        #hiddenObjectProperties(style='display: none;')= tabelaObjectProperties
+        select#filter-field1
+            option
+            option(value='name') Name
+            option(value='parentClass') Parent Class
+        select#filter-type1
+            option(value='=') '='
+            option(value='!=') '!='
+            option(value='like') 'like'
+        input#filter-value1(type='text' placeholder='value to filter')
+        button#filter-clear1 Clear Filter
+        #tabelaClasses
+
+        h2 Individuals
+        select#filter-field2
+            option
+            option(value='name') Name
+            option(value='classe') Class
+            option(value='propertyType') Property Type
+            option(value='propertyName') Property Name
+            option(value='propertyValue') Property Value
+        select#filter-type2
+            option(value='=') '='
+            option(value='!=') '!='
+            option(value='<') '<'
+            option(value='<=') '<='
+            option(value='>') '>'
+            option(value='=>') '=>'
+            option(value='like') 'like'
+        input#filter-value2(type='text' placeholder='value to filter')
+        button#filter-clear2 Clear Filter
+        #tabelaIndividuals
+
+        h2 Object Properties
+        select#filter-field3
+            option
+            option(value='name') Name
+            option(value='transitive') Transitive
+            option(value='asymmetric') Asymmetric
+            option(value='symmetric') Symmetric
+            option(value='reflexive') Reflexive
+            option(value='irreflexive') Irreflexive
+            option(value='functional') Functional
+            option(value='inverseFunctional') Inverse Functional
+        select#filter-type3
+            option(value='=') '='
+            option(value='!=') '!='
+            option(value='like') 'like'
+        input#filter-value3(type='text' placeholder='value to filter')
+        button#filter-clear3 Clear Filter
+        #tabelaObjectProperties
+
+        script(type='text/javascript').
+             var fieldE1 = document.getElementById("filter-field1");
+             var typeE1 = document.getElementById("filter-type1");
+             var valueE1 = document.getElementById("filter-value1");
+
+             var fieldE2 = document.getElementById("filter-field2");
+             var typeE2 = document.getElementById("filter-type2");
+             var valueE2 = document.getElementById("filter-value2");
+
+             var fieldE3 = document.getElementById("filter-field3");
+             var typeE3 = document.getElementById("filter-type3");
+             var valueE3 = document.getElementById("filter-value3");
+
+             function updateFilter1(){
+              var filterVal = fieldE1.options[fieldE1.selectedIndex].value;
+              var typeVal = typeE1.options[typeE1.selectedIndex].value;
+
+              var filter = filterVal == "function" ? customFilter : filterVal;
+
+              if(filterVal == "function" ){
+                typeE1.disabled = true;
+                valueE1.disabled = true;
+              }else{
+                typeE1.disabled = false;
+                valueE1.disabled = false;
+              }
+
+              if(filterVal){
+                table1.setFilter(filter,typeVal, valueE1.value);
+              }
+            }
+
+            //Update filters on value change
+            document.getElementById("filter-field1").addEventListener("change", updateFilter1);
+            document.getElementById("filter-type1").addEventListener("change", updateFilter1);
+            document.getElementById("filter-value1").addEventListener("keyup", updateFilter1);
+
+            //Clear filters on "Clear Filters" button click
+            document.getElementById("filter-clear1").addEventListener("click", function(){
+              fieldE1.value = "";
+              typeE1.value = "=";
+              valueE1.value = "";
+
+              table1.clearFilter();
+            });
+
+            function updateFilter2(){
+             var filterVal = fieldE2.options[fieldE2.selectedIndex].value;
+             var typeVal = typeE2.options[typeE2.selectedIndex].value;
+
+              var filter = filterVal == "function" ? customFilter : filterVal;
+
+              if(filterVal == "function" ){
+                typeE2.disabled = true;
+                valueE2.disabled = true;
+              }else{
+                typeE2.disabled = false;
+                valueE2.disabled = false;
+              }
+
+              if(filterVal){
+                table2.setFilter(filter,typeVal, valueE2.value);
+              }
+            }
+
+            //Update filters on value change
+            document.getElementById("filter-field2").addEventListener("change", updateFilter2);
+            document.getElementById("filter-type2").addEventListener("change", updateFilter2);
+            document.getElementById("filter-value2").addEventListener("keyup", updateFilter2);
+
+            //Clear filters on "Clear Filters" button click
+            document.getElementById("filter-clear2").addEventListener("click", function(){
+              fieldE2.value = "";
+              typeE2.value = "=";
+              valueE2.value = "";
+
+              table2.clearFilter();
+            });
+
+            function updateFilter3(){
+             var filterVal = fieldE3.options[fieldE3.selectedIndex].value;
+             var typeVal = typeE3.options[typeE3.selectedIndex].value;
+
+              var filter = filterVal == "function" ? customFilter : filterVal;
+
+              if(filterVal == "function" ){
+                typeE3.disabled = true;
+                valueE3.disabled = true;
+              }else{
+                typeE3.disabled = false;
+                valueE3.disabled = false;
+              }
+
+              if(filterVal){
+                table3.setFilter(filter,typeVal, valueE3.value);
+              }
+            }
+
+            //Update filters on value change
+            document.getElementById("filter-field3").addEventListener("change", updateFilter3);
+            document.getElementById("filter-type3").addEventListener("change", updateFilter3);
+            document.getElementById("filter-value3").addEventListener("keyup", updateFilter3);
+
+            //Clear filters on "Clear Filters" button click
+            document.getElementById("filter-clear3").addEventListener("click", function(){
+              fieldE3.value = "";
+              typeE3.value = "=";
+              valueE3.value = "";
+
+              table3.clearFilter();
+            });
+
+            var tabledata = JSON.parse(document.getElementById("hiddenClasses").innerHTML);
+            //define table
+            var table1 = new Tabulator("#tabelaClasses", {
+                data:tabledata,
+                dataTree:true,
+                dataTreeStartExpanded:false,
+                dataTreeFilter:true,
+                columns:[
+                    {title:"Name", field:"name", width:200, responsive:0},
+                    {title:"Parent Class", field:"parentClass"},
+                    ],
+                layout:"fitData",
+                });
+
+            
+            var tabledata1 = JSON.parse(document.getElementById("hiddenIndividuals").innerHTML);
+            //define table
+            var table2 = new Tabulator("#tabelaIndividuals", {
+                data:tabledata1,
+                dataTree:true,
+                dataTreeStartExpanded:false,
+                dataTreeFilter:true,
+                columns:[
+                    {title:"Name", field:"name", width:200, responsive:0},
+                    {title:"Class", field:"classe"},
+                    {title:"Property Type", field:"propertyType"},
+                    {title:"Property Name", field:"propertyName"},
+                    {title:"Property Value", field:"propertyValue"},
+                    ],
+                layout:"fitData",
+                });
+
+            var tabledata2 = JSON.parse(document.getElementById("hiddenObjectProperties").innerHTML);
+            //define table
+            var table3 = new Tabulator("#tabelaObjectProperties", {
+                data:tabledata2,
+                dataTreeFilter:true,
+                columns:[
+                    {title:"Name", field:"name", width:200, responsive:0},
+                    {title:"Transitive", field:"transitive"},
+                    {title:"Asymmetric", field:"asymmetric"},
+                    {title:"Symmetric", field:"symmetric"},
+                    {title:"Reflexive", field:"reflexive"},
+                    {title:"Irrelexive", field:"irreflexive"},
+                    {title:"Functional", field:"functional"},
+                    {title:"InverseFunctional", field:"inverseFunctional"},
+                    ],
+                layout:"fitData",
+                });

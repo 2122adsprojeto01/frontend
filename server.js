@@ -153,8 +153,10 @@ function handle_java_recieve(req, res) {
             break;
         case 'viewer':
             clients.get(id).render("viewer", {
-                page: req.body.page,
-                tabela1: req.body.tabela1
+                page: "Vieweing the Ontology",
+                tabelaClasses: req.body.tabelaClasses,
+                tabelaIndividuals: req.body.tabelaIndividuals,
+                tabelaObjectProperties: req.body.tabelaObjectProperties
             });
             break;
         case 'queries':
