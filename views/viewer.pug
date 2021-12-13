@@ -75,6 +75,33 @@ block content
              var typeE3 = document.getElementById("filter-type3");
              var valueE3 = document.getElementById("filter-value3");
 
+            // Operators
+            var compare = {
+                '=': function(a, b) { return a == b },
+                '<': function(a, b) { return a < b },
+                '<=': function(a, b) { return a <= b },
+                '>': function(a, b) { return a > b },
+                '>=': function(a, b) { return a >= b },
+                '!=': function(a, b) { return a != b },
+                'like': function(a, b) { return a.includes(b)}
+            };
+
+            // Filter function
+            var filterTree = function (data, filter) {
+                if (data['_children'] && data['_children'].length > 0) {
+                    for (var i in data['_children']) {
+
+                        if(data[filter.field] === undefined) data[filter.field] = "";
+
+                        return compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
+                    }
+                }
+
+                if(data[filter.field] === undefined) data[filter.field] = "";
+
+                return compare[filter.type](data[filter.field], filter.value);
+            };
+
              function updateFilter1(){
               var filterVal = fieldE1.options[fieldE1.selectedIndex].value;
               var typeVal = typeE1.options[typeE1.selectedIndex].value;
@@ -90,8 +117,11 @@ block content
               }
 
               if(filterVal){
-                table1.setFilter(filter,typeVal, valueE1.value);
-              }
+                    // Set a filter. The operator can now be provided dynamically
+                    table1.setFilter(filterTree, {field:filter, type: typeVal, value:valueE1.value});
+                    //table1.setFilter(filter,typeVal, valueE1.value);
+            }
+
             }
 
             //Update filters on value change
@@ -123,7 +153,7 @@ block content
               }
 
               if(filterVal){
-                table2.setFilter(filter,typeVal, valueE2.value);
+                table2.setFilter(filterTree, {field:filter, type: typeVal, value:valueE2.value});
               }
             }
 
@@ -156,7 +186,7 @@ block content
               }
 
               if(filterVal){
-                table3.setFilter(filter,typeVal, valueE3.value);
+                table3.setFilter(filterTree, {field:filter, type: typeVal, value:valueE3.value});
               }
             }
 
