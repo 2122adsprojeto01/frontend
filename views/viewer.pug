@@ -88,13 +88,17 @@ block content
 
             // Filter function
             var filterTree = function (data, filter) {
+                var comp;
                 if (data['_children'] && data['_children'].length > 0) {
                     for (var i in data['_children']) {
 
                         if(data[filter.field] === undefined) data[filter.field] = "";
 
-                        return compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
+                        comp = compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
+
+                        //return compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
                     }
+                    return comp;
                 }
 
                 if(data[filter.field] === undefined) data[filter.field] = "";
