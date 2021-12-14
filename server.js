@@ -153,7 +153,7 @@ function handle_java_recieve(req, res) {
             break;
         case 'viewer':
             clients.get(id).render("viewer", {
-                page: "Vieweing the Ontology",
+                page: "Viewing the Ontology",
                 tabelaClasses: req.body.tabelaClasses,
                 tabelaIndividuals: req.body.tabelaIndividuals,
                 tabelaObjectProperties: req.body.tabelaObjectProperties
