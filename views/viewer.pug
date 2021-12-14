@@ -99,16 +99,19 @@ block content
 
                         if(data[filter.field] === undefined) data[filter.field] = "";
 
-                        comp = compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
-
+                        comp = compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase()) || filterTree(data['_children'][i], filter);
+                        console.log("comp in for - " + comp);
                         //return compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
                     }
+                    console.log("loop is over, comp = "+ comp);
                     return comp;
                 }
 
                 if(data[filter.field] === undefined) data[filter.field] = "";
 
-                return compare[filter.type](data[filter.field], filter.value);
+                console.log("No Children, comp = " + compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase()));
+                comp = compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase());
+                return comp;
             };
 
              function updateFilter1(){
