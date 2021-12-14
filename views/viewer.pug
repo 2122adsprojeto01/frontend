@@ -14,6 +14,7 @@ block content
         select#filter-field1
             option
             option(value='name') Name
+            option(value='comments') Comments
             option(value='parentClass') Parent Class
         select#filter-type1
             option(value='=') '='
@@ -28,9 +29,11 @@ block content
             option
             option(value='name') Name
             option(value='classe') Class
+            option(value='comments') Comments
             option(value='propertyType') Property Type
             option(value='propertyName') Property Name
             option(value='propertyValue') Property Value
+            option(value='propertyComments') Property Comments
         select#filter-type2
             option(value='=') '='
             option(value='!=') '!='
@@ -54,6 +57,7 @@ block content
             option(value='irreflexive') Irreflexive
             option(value='functional') Functional
             option(value='inverseFunctional') Inverse Functional
+            option(value='comments') Comments
         select#filter-type3
             option(value='=') '='
             option(value='!=') '!='
@@ -215,11 +219,15 @@ block content
                 dataTree:true,
                 dataTreeStartExpanded:false,
                 dataTreeFilter:true,
+                //pagination: true,
+                //paginationSize: Math.min(tabledata.length, 5),
+                height: "33%",
                 columns:[
                     {title:"Name", field:"name", width:200, responsive:0},
+                    {title:"Comments", field:"comments"},
                     {title:"Parent Class", field:"parentClass"},
                     ],
-                layout:"fitData",
+                layout:"fitDataStretch",
                 });
 
             
@@ -230,14 +238,19 @@ block content
                 dataTree:true,
                 dataTreeStartExpanded:false,
                 dataTreeFilter:true,
+                //pagination: true,
+                //paginationSize: Math.min(tabledata.length, 5),
+                height: "33%",
                 columns:[
                     {title:"Name", field:"name", width:200, responsive:0},
                     {title:"Class", field:"classe"},
+                    {title:"Comments", field:"comments"},
                     {title:"Property Type", field:"propertyType"},
                     {title:"Property Name", field:"propertyName"},
                     {title:"Property Value", field:"propertyValue"},
+                    {title:"Property Comments", field:"propertyComments"}
                     ],
-                layout:"fitData",
+                layout:"fitDataStretch",
                 });
 
             var tabledata2 = JSON.parse(document.getElementById("hiddenObjectProperties").innerHTML);
@@ -245,6 +258,9 @@ block content
             var table3 = new Tabulator("#tabelaObjectProperties", {
                 data:tabledata2,
                 dataTreeFilter:true,
+                //pagination: true,
+                //paginationSize: Math.min(tabledata.length, 5),
+                height: "33%",
                 columns:[
                     {title:"Name", field:"name", width:200, responsive:0},
                     {title:"Transitive", field:"transitive"},
@@ -254,6 +270,7 @@ block content
                     {title:"Irrelexive", field:"irreflexive"},
                     {title:"Functional", field:"functional"},
                     {title:"InverseFunctional", field:"inverseFunctional"},
+                    {title:"Comments", field:"comments"}
                     ],
-                layout:"fitData",
+                layout:"fitDataFill",
                 });
