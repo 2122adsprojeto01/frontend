@@ -1,0 +1,9 @@
+extends viewer.pug
+block evenMoreHead
+    link(rel='stylesheet' href='editor.css')
+block specificUserType
+    h1 Write a SQWRL query to test the results in a table
+    form(method='post' action='/stringQueryToTable')
+        input(type='hidden' name='pedido' value='stringQueryToTable')
+        input(type='text' name='queryToMake' required)
+        input(type='submit' value='Submit')

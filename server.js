@@ -37,6 +37,10 @@ app.get('/about', (req, res) => {
     res.render("about", { title: "Hey", message: "Hello there!" });
 })
 
+app.get('/test_table_results', (req, res) => {
+    res.render("test_table_results", {});
+})
+
 
 app.use("/server_client", router_java_get_stuff);
 router_java_get_stuff.get('*', handle_java_connection)
@@ -170,6 +174,14 @@ function handle_java_recieve(req, res) {
                 multiple_data_properties: req.body.multiple_data_properties
             });
             break;
+        case 'queryResultsTable':
+            clients.get(id).render("table_results", {
+                page: "Query Results - Table View",
+                fields: req.body.fields,
+                results: req.body.queryResultsTable,
+                multiple_fields: req.body.multiple_fields
+            });
+            break;
         default:
             console.log(`Sorry, we are out of ${nextPage}.`);
     }
@@ -277,6 +289,7 @@ app.use("/changeDataProperty", router_client);
 app.use("/changeObjectProperty", router_client);
 app.use("/formQuery", router_client);
 app.use("/stringQuery", router_client);
+app.use("/stringQueryToTable", router_client);
 
 router_client.get('*', handle_client_request)
 router_client.post('*', handle_client_request)
