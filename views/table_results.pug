@@ -30,7 +30,6 @@ block content
                 button#filter-clear Clear Filter
                 button#add-filter Add New Filter
         #tabela
-        #test
 
 
         script(type='text/javascript').
@@ -178,7 +177,6 @@ block content
               newValueInput.addEventListener("keyup", updateFilter);
               filters.appendChild(newValueInput);
               
-              document.getElementById("test").innerHTML = addedFilters;
             });
             
             var tabledata = JSON.parse(document.getElementById("hiddenResults").innerHTML);
