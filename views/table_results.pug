@@ -1,0 +1,194 @@
+extends index.pug
+block moreHead
+    block evenMoreHead
+        link(href='https://unpkg.com/tabulator-tables@5.0.7/dist/css/tabulator.min.css' rel='stylesheet')
+        script(type='text/javascript' src='https://unpkg.com/tabulator-tables@5.0.7/dist/js/tabulator.min.js')
+        link(href='tab.css' rel='stylesheet')
+
+block content
+    h1= page
+    block specificUserType
+        h2 Results
+        #hiddenResults(style='display: none;')= results
+        #filters
+            if(fields != "")
+                select#filter-field
+                    if(multiple_fields == "true")
+                        each f in fields
+                            option= f
+                    else
+                        option= fields
+                select#filter-type
+                    option(value='=') '='
+                    option(value='!=') '!='
+                    option(value='<') '<'
+                    option(value='<=') '<='
+                    option(value='>') '>'
+                    option(value='>=') '>='
+                    option(value='like') 'like'
+                input#filter-value(type='text' placeholder='value to filter')
+                button#filter-clear Clear Filter
+                button#add-filter Add New Filter
+        #tabela
+
+
+        script(type='text/javascript').
+             var addedFilters = 0;
+             var attributes = document.getElementById("filter-field").innerHTML;
+             var options = document.getElementById("filter-type").innerHTML;
+
+             var fieldEl = document.getElementById("filter-field");
+             var typeEl = document.getElementById("filter-type");
+             var valueEl = document.getElementById("filter-value");
+
+
+            // Operators
+            var compare = {
+                '=': function(a, b) { return a == b},
+                '<': function(a, b) { return a < b },
+                '<=': function(a, b) { return a <= b },
+                '>': function(a, b) { return a > b },
+                '>=': function(a, b) { return a >= b },
+                '!=': function(a, b) { return a != b },
+                'like': function(a, b) { return a.includes(b)}
+            };
+
+            // Filter function
+            var filterTree = function (data, filter) {
+                var comp;
+                if (data['_children'] && data['_children'].length > 0) {
+                    for (var i in data['_children']) {
+
+                        if(data[filter.field] === undefined) data[filter.field] = "";
+
+                        comp = compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase()) || filterTree(data['_children'][i], filter);
+                        console.log("comp in for - " + comp);
+                        //return compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
+                    }
+                    console.log("loop is over, comp = "+ comp);
+                    return comp;
+                }
+
+                if(data[filter.field] === undefined) data[filter.field] = "";
+
+                console.log("No Children, comp = " + compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase()));
+                comp = compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase());
+                return comp;
+            };
+
+             function updateFilter(){
+              table.clearFilter();
+
+              var filterVal = fieldEl.options[fieldEl.selectedIndex].value;
+              var typeVal = typeEl.options[typeEl.selectedIndex].value;
+
+              var filter = filterVal == "function" ? customFilter : filterVal;
+
+              if(filterVal == "function" ){
+                typeEl.disabled = true;
+                valueEl.disabled = true;
+              }else{
+                typeEl.disabled = false;
+                valueEl.disabled = false;
+              }
+
+              if(filterVal){
+                    // Set a filter. The operator can now be provided dynamically
+                    if(isNaN(valueEl.value)){
+                        table.addFilter(filter, typeVal, valueEl.value);
+                    }
+                    else{
+                        table.addFilter(filter, typeVal, Number(valueEl.value));
+                    }
+                    
+                    for (var i = 1; i <= addedFilters; i++) {
+                      var fieldEli = document.getElementById("filter-field" + i);
+                      var typeEli = document.getElementById("filter-type" + i);
+                      var valueEli = document.getElementById("filter-value" + i);
+
+                      var filterVali = fieldEli.options[fieldEli.selectedIndex].value;
+                      var typeVali = typeEli.options[typeEli.selectedIndex].value;
+
+                      var filteri = filterVali == "function" ? customFilter : filterVali;
+
+                      if(filterVali == "function" ){
+                        typeEli.disabled = true;
+                        valueEli.disabled = true;
+                      }else{
+                        typeEli.disabled = false;
+                        valueEli.disabled = false;
+                      }
+           
+                      if(filterVali){
+                        if(isNaN(valueEli.value)){
+                            table.addFilter(filteri, typeVali, valueEli.value);
+                        }
+                        else{
+                            table.addFilter(filteri, typeVali, Number(valueEli.value));
+                        }
+                      }
+                    }
+              }
+            }
+
+            //Update filters on value change
+            document.getElementById("filter-field").addEventListener("change", updateFilter);
+            document.getElementById("filter-type").addEventListener("change", updateFilter);
+            document.getElementById("filter-value").addEventListener("keyup", updateFilter);
+
+            //Clear filters on "Clear Filters" button click
+            document.getElementById("filter-clear").addEventListener("click", function(){
+              fieldEl.value = "";
+              typeEl.value = "=";
+              valueEl.value = "";
+
+              var filters = document.getElementById("filters");
+              while(addedFilters != 0){
+                document.getElementById("filter-field"+addedFilters).remove();
+                document.getElementById("filter-type"+addedFilters).remove();
+                document.getElementById("filter-value"+addedFilters).remove();
+                filters.removeChild(filters.lastChild);
+                addedFilters = addedFilters - 1;
+              }
+
+              table.clearFilter();
+            });
+
+            document.getElementById("add-filter").addEventListener("click", function(){
+              var filters = document.getElementById("filters");
+              addedFilters = addedFilters + 1;
+              filters.appendChild(document.createElement("br"));
+
+              var newAttributeSelection = document.createElement("select");
+              newAttributeSelection.setAttribute("id", "filter-field"+addedFilters);
+              newAttributeSelection.innerHTML = attributes;
+              newAttributeSelection.addEventListener("change", updateFilter);
+              filters.appendChild(newAttributeSelection);
+
+              var newOptionSelection = document.createElement("select");
+              newOptionSelection.setAttribute("id", "filter-type"+addedFilters);
+              newOptionSelection.innerHTML = options;
+              newOptionSelection.addEventListener("change", updateFilter);
+              filters.appendChild(newOptionSelection);
+
+              var newValueInput = document.createElement("input");
+              newValueInput.setAttribute("id", "filter-value"+addedFilters);
+              newValueInput.type = "text";
+              newValueInput.addEventListener("keyup", updateFilter);
+              filters.appendChild(newValueInput);
+              
+            });
+            
+            var tabledata = JSON.parse(document.getElementById("hiddenResults").innerHTML);
+            //define table
+            var table = new Tabulator("#tabela", {
+                data:tabledata,
+                autoColumns:true,
+                //dataTree:true,
+                //dataTreeStartExpanded:false,
+                //dataTreeFilter:true,
+                //pagination: true,
+                //paginationSize: Math.min(tabledata.length, 5),
+                height: 190,
+                layout:"fitDataStretch",
+                });
