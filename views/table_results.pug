@@ -29,6 +29,10 @@ block content
                 input#filter-value(type='text' placeholder='value to filter')
                 button#filter-clear Clear Filter
                 button#add-filter Add New Filter
+                input#OR(type='radio' value='AND' name='and_or' checked)
+                label(for='AND') and
+                input#AND(type='radio' value='OR' name='and_or')
+                label(for='OR') or
         #tabela
 
 
@@ -53,28 +57,6 @@ block content
                 'like': function(a, b) { return a.includes(b)}
             };
 
-            // Filter function
-            var filterTree = function (data, filter) {
-                var comp;
-                if (data['_children'] && data['_children'].length > 0) {
-                    for (var i in data['_children']) {
-
-                        if(data[filter.field] === undefined) data[filter.field] = "";
-
-                        comp = compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase()) || filterTree(data['_children'][i], filter);
-                        console.log("comp in for - " + comp);
-                        //return compare[filter.type](data[filter.field], filter.value) || filterTree(data['_children'][i], filter);
-                    }
-                    console.log("loop is over, comp = "+ comp);
-                    return comp;
-                }
-
-                if(data[filter.field] === undefined) data[filter.field] = "";
-
-                console.log("No Children, comp = " + compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase()));
-                comp = compare[filter.type](data[filter.field].toLowerCase(), filter.value.toLowerCase());
-                return comp;
-            };
 
              function updateFilter(){
               table.clearFilter();
@@ -92,41 +74,86 @@ block content
                 valueEl.disabled = false;
               }
 
+              var filterAndOr = document.querySelector('input[name="and_or"]:checked').value;
+
               if(filterVal){
-                    // Set a filter. The operator can now be provided dynamically
-                    if(isNaN(valueEl.value)){
-                        table.addFilter(filter, typeVal, valueEl.value);
-                    }
-                    else{
-                        table.addFilter(filter, typeVal, Number(valueEl.value));
-                    }
+                    if(filterAndOr == "AND"){
+                            // Set a filter. The operator can now be provided dynamically
+                            if(isNaN(valueEl.value)){
+                                table.addFilter(filter, typeVal, valueEl.value);
+                            }
+                            else{
+                                table.addFilter(filter, typeVal, Number(valueEl.value));
+                            }
                     
-                    for (var i = 1; i <= addedFilters; i++) {
-                      var fieldEli = document.getElementById("filter-field" + i);
-                      var typeEli = document.getElementById("filter-type" + i);
-                      var valueEli = document.getElementById("filter-value" + i);
+                            for (var i = 1; i <= addedFilters; i++) {
+                              var fieldEli = document.getElementById("filter-field" + i);
+                              var typeEli = document.getElementById("filter-type" + i);
+                              var valueEli = document.getElementById("filter-value" + i);
 
-                      var filterVali = fieldEli.options[fieldEli.selectedIndex].value;
-                      var typeVali = typeEli.options[typeEli.selectedIndex].value;
+                              var filterVali = fieldEli.options[fieldEli.selectedIndex].value;
+                              var typeVali = typeEli.options[typeEli.selectedIndex].value;
 
-                      var filteri = filterVali == "function" ? customFilter : filterVali;
+                              var filteri = filterVali == "function" ? customFilter : filterVali;
 
-                      if(filterVali == "function" ){
-                        typeEli.disabled = true;
-                        valueEli.disabled = true;
-                      }else{
-                        typeEli.disabled = false;
-                        valueEli.disabled = false;
-                      }
+                              if(filterVali == "function" ){
+                                typeEli.disabled = true;
+                                valueEli.disabled = true;
+                              }else{
+                                typeEli.disabled = false;
+                                valueEli.disabled = false;
+                              }
            
-                      if(filterVali){
-                        if(isNaN(valueEli.value)){
-                            table.addFilter(filteri, typeVali, valueEli.value);
-                        }
-                        else{
-                            table.addFilter(filteri, typeVali, Number(valueEli.value));
-                        }
-                      }
+                              if(filterVali){
+                                if(isNaN(valueEli.value)){
+                                    table.addFilter(filteri, typeVali, valueEli.value);
+                                }
+                                else{
+                                    table.addFilter(filteri, typeVali, Number(valueEli.value));
+                                }
+                              }
+                            }
+                    }
+
+                    else if(filterAndOr == "OR"){
+                            // Set a filter. The operator can now be provided dynamically
+                            var filterString = []
+                            if(isNaN(valueEl.value)){
+                                filterString.push({field: filter, type: typeVal, value: valueEl.value});
+                            }
+                            else{
+                                filterString.push({field: filter, type: typeVal, value: Number(valueEl.value)});
+                            }
+                    
+                            for (var i = 1; i <= addedFilters; i++) {
+                              var fieldEli = document.getElementById("filter-field" + i);
+                              var typeEli = document.getElementById("filter-type" + i);
+                              var valueEli = document.getElementById("filter-value" + i);
+
+                              var filterVali = fieldEli.options[fieldEli.selectedIndex].value;
+                              var typeVali = typeEli.options[typeEli.selectedIndex].value;
+
+                              var filteri = filterVali == "function" ? customFilter : filterVali;
+
+                              if(filterVali == "function" ){
+                                typeEli.disabled = true;
+                                valueEli.disabled = true;
+                              }else{
+                                typeEli.disabled = false;
+                                valueEli.disabled = false;
+                              }
+           
+                              if(filterVali){
+                                if(isNaN(valueEli.value)){
+                                    filterString.push({field: filteri, type: typeVali, value: valueEli.value});
+                                }
+                                else{
+                                    filterString.push({field: filteri, type: typeVali, value: Number(valueEli.value)});
+                                }
+                              }
+                            }
+
+                            table.setFilter([filterString]);
                     }
               }
             }
@@ -135,6 +162,8 @@ block content
             document.getElementById("filter-field").addEventListener("change", updateFilter);
             document.getElementById("filter-type").addEventListener("change", updateFilter);
             document.getElementById("filter-value").addEventListener("keyup", updateFilter);
+            document.getElementById("AND").addEventListener("change", updateFilter);
+            document.getElementById("OR").addEventListener("change", updateFilter);
 
             //Clear filters on "Clear Filters" button click
             document.getElementById("filter-clear").addEventListener("click", function(){
@@ -184,11 +213,6 @@ block content
             var table = new Tabulator("#tabela", {
                 data:tabledata,
                 autoColumns:true,
-                //dataTree:true,
-                //dataTreeStartExpanded:false,
-                //dataTreeFilter:true,
-                //pagination: true,
-                //paginationSize: Math.min(tabledata.length, 5),
                 height: 190,
                 layout:"fitDataStretch",
                 });
