@@ -1,0 +1,106 @@
+extends viewer.pug
+block evenMoreHead
+    link(rel='stylesheet' href='editor.css')
+block specificUserType
+    if(answers != "")
+        h1 Answers
+        ul
+            if (multiple_answers == "true")
+                each a in answers
+                    li= a
+            if (multiple_answers == "false")
+                li= a
+    
+    h1 Query the Ontology
+    form(method='post' action='/stringQueryToTable')
+        div
+            label(for="common")
+            select#commonQuery(name="common" onclick="changeQuery()")
+                option(value="owl:Thing(?i) -> sqwrl:select(?i) ^ sqwrl:columnNames(\"Individual\")") List all individuals in the ontology
+                option(value="tbox:cd(?c) -> sqwrl:select(?c) ^ sqwrl:columnNames(\"Class\")") List all declared classes
+        
+        div
+            p View Individuals of class
+            a#createQueryText(style={display: "none"})
+            if (classes != "" && dataProperties != "")
+                if (multiple_classes == "true")
+                    select#classToQuery(name='classToQuery' onclick="changeCreateQuery()")
+                        each c in classes
+                            option(value=c)= c
+                if (multiple_classes == "false")
+                    select#classToQuery(name='classToQuery')
+                        option= classes
+            p with these properties
+            div#duplicater0
+                if (multiple_data_properties == "true")
+                    select#dataProperty1(name='dataProperty' onclick="changeCreateQueryProp()")
+                        each dp in dataProperties
+                            option(value=dp)= dp
+                if (multiple_data_properties == "false")
+                    select#dataProperty1(name='dataProperty')
+                        option= dataProperties
+        div
+            button(type="button" onclick="addNewProp()") +
+            button#removeBtn(type="button" disabled="disable" onclick="delLastChild()") - 
+
+        div
+            input(type='hidden' name='pedido' value='stringQueryToTable')
+
+            label(for="queryToMake") Query Preview
+            input(style={width: '100%'} value="owl:Thing(?i) -> sqwrl:select(?i) ^ sqwrl:columnNames(\"Individual\")" type='text' id='return' name='queryToMake' required)
+            div
+                button(type="button" onclick="resetQuery()") Reset Query
+                input(type='submit' value='Submit')
+
+        script(type='text/javascript').
+            function changeQuery() {
+                var x = document.getElementById("commonQuery").value;
+                document.getElementById("return").value = x;
+            }
+            function changeCreateQuery() {
+                var x = document.getElementById("classToQuery").value;
+                document.getElementById("createQueryText").value = x+"(?"+ x.toUpperCase() + ")";
+                document.getElementById("return").value = document.getElementById("createQueryText").value + " -> sqwrl:select(?" + x.toUpperCase() + ")";
+            }
+            function changeCreateQueryProp(){
+                var classQuery = document.getElementById("classToQuery").value.toUpperCase()
+
+                var textToQuery = document.getElementById("createQueryText").value;
+                var selectQuery = "sqwrl:select(?" + classQuery;
+
+                var dataPropArray = document.getElementsByName("dataProperty");
+                dataPropArray.forEach(function (element) {
+                    textToQuery += " ^ " + element.value + "(?" + classQuery + ",?" + element.value.toUpperCase() + ")";
+                    selectQuery += ",?" + element.value.toUpperCase();
+                });
+                selectQuery += ")";
+                document.getElementById("return").value = textToQuery + " -> " + selectQuery;
+
+            }
+            function resetQuery() {
+                document.getElementById("return").value = "";
+            }
+            var i = 0;
+            var j = 0;
+            function addNewProp() {
+                var original = document.getElementById('duplicater' + i);
+                var clone = original.cloneNode(true); // "deep" clone
+                clone.id = "duplicater" + ++i; // there can only be one element with an ID // event handlers are not cloned
+                original.parentNode.appendChild(clone);
+                ++j;
+                console.log(j);
+                if(j > 0){
+                    document.getElementById("removeBtn").disabled = false;
+                }
+            }
+            function delLastChild() {
+                console.log("HERE");
+                if(j > 0){
+                    document.getElementById('duplicater' + i).remove();
+                    --j;
+                    --i;
+                    if(j < 1){
+                        document.getElementById("removeBtn").disabled = true;
+                    }
+                }
+            }

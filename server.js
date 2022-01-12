@@ -164,7 +164,7 @@ function handle_java_recieve(req, res) {
             });
             break;
         case 'queries':
-            clients.get(id).render("queries", {
+            clients.get(id).render("queries_test", {
                 page: req.body.page,
                 answers: req.body.answers,
                 multiple_answers: req.body.multiple_answers,
